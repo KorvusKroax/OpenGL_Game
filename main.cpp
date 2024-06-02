@@ -3,9 +3,6 @@
 #include <player.h>
 #include <enemy.h>
 
-// #include <iostream>
-// #include <chrono>
-
 double mouseX, mouseY;
 
 void update(OpenGL *openGL, Canvas *canvas);
@@ -18,7 +15,7 @@ int main()
     OpenGL openGL = OpenGL(canvas.width, canvas.height, 4, canvas.pixels);
 
     Player player = Player(canvas.width * .5f, 20, 20, 5, 100);
-    EnemyBlock enemyBlock = EnemyBlock(30, canvas.height * .5f, 10, 10, 50);
+    EnemyBlock enemyBlock = EnemyBlock();
 
     while (!openGL.shouldClose())
     {
@@ -45,17 +42,6 @@ void show(Canvas *canvas)
 {
     canvas->drawCircle((int)mouseX, (int)mouseY, 3, ColorRGBA(0, 255, 255, 255));
 }
-
-// void _show()
-// {
-//     auto startTime = std::chrono::high_resolution_clock::now();
-
-//     show();
-
-//     auto finishTime = std::chrono::high_resolution_clock::now();
-//     auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finishTime - startTime);
-//     std::cout << microseconds.count() << "µs (" << (float)microseconds.count() / 1000 << "ms)" << std::endl;
-// }
 
 void control(OpenGL *openGL)
 {

@@ -1,51 +1,57 @@
 #include <openGL/open_gl.h>
 #include <misc/canvas.h>
 
-enum EnemyState { MOVE, TURN, DIE };
-
 class Enemy
 {
     private:
+        float x, y;
+
+        float width = 10;
+        float height = 10;
+        float speed = 50;
+
         void show(Canvas *canvas);
 
     public:
-        float x, y, w, h, speed;
-
         Enemy();
-        Enemy(float x, float y, float w, float h, float speed);
+        Enemy(int x, int y);
         ~Enemy();
 
-        EnemyState update(OpenGL *openGL, Canvas *canvas);
-        void setSpeed(float speed);
+        int update(OpenGL *openGL, Canvas *canvas);
+        void changeDirection();
 };
+
+
 
 class EnemyRow
 {
     private:
-        float x, y, w, h, speed;
+        float width;
+
         Enemy *enemies;
         int enemyCount = 8;
-        float spacing = 10;
 
     public:
         EnemyRow();
-        EnemyRow(float x, float y, float w, float h, float speed);
+        EnemyRow(float y, float enemyWidth = 10, float spacing = 10);
         ~EnemyRow();
 
-        EnemyState update(OpenGL *openGL, Canvas *canvas);
-        void setSpeed(float speed);
+        bool update(OpenGL *openGL, Canvas *canvas);
+        void changeDirection();
 };
+
+
 
 class EnemyBlock
 {
     private:
-        float x, y, w, h, speed;
+        float height;
+
         EnemyRow *enemyRows;
-        int enemyRowCount = 5;
-        float spacing = 10;
+        int rowCount = 5;
 
     public:
-        EnemyBlock(float x, float y, float w, float h, float speed);
+        EnemyBlock(float enemyHeight = 10, float spacing = 10);
         ~EnemyBlock();
 
         void update(OpenGL *openGL, Canvas *canvas);
