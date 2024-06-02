@@ -18,14 +18,14 @@ int main()
     OpenGL openGL = OpenGL(canvas.width, canvas.height, 4, canvas.pixels);
 
     Player player = Player(canvas.width * .5f, 20, 20, 5, 100);
-    Enemy enemy = Enemy(30, canvas.height - 20, 10, 10, 50);
+    EnemyRow enemyRow = EnemyRow(30, canvas.height - 20, 10, 10, 50);
 
     while (!openGL.shouldClose())
     {
         canvas.clearCanvas();
 
         player.update(&openGL, &canvas);
-        enemy.update(&openGL, &canvas);
+        enemyRow.update(&openGL, &canvas);
 
         update(&openGL, &canvas);
 
