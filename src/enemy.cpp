@@ -13,16 +13,22 @@ Enemy::Enemy(float x, float y, float w, float h, float speed)
 
 Enemy::~Enemy() { }
 
-void Enemy::update(OpenGL *openGL, Canvas *canvas)
+EnemyState Enemy::update(OpenGL *openGL, Canvas *canvas)
 {
-    if (x < 0 || x > canvas->width - 1) speed *= -1;
     x += speed * openGL->deltaTime;
     show(canvas);
+
+    return (x <= 0 || x >= canvas->width - 1) ? TURN : MOVE;
 }
 
 void Enemy::show(Canvas *canvas)
 {
     canvas->drawRectangle(int(x - w * .5f), int(y - h * .5f), w, h, ColorRGBA(255, 255, 255, 255));
+}
+
+void Enemy::setSpeed(float speed)
+{
+    this->speed = speed;
 }
 
 
@@ -47,10 +53,20 @@ EnemyRow::EnemyRow(float x, float y, float w, float h, float speed)
 
 EnemyRow::~EnemyRow() { }
 
-void EnemyRow::update(OpenGL *openGL, Canvas *canvas)
+EnemyState EnemyRow::update(OpenGL *openGL, Canvas *canvas)
+{
+    bool isTurn = false;
+    for (int i = 0; i < enemyCount; i++) {
+        isTurn = isTurn || enemies[i].update(openGL, canvas) == TURN;
+    }
+
+    return isTurn ? TURN : MOVE;
+}
+
+void EnemyRow::setSpeed(float speed)
 {
     for (int i = 0; i < enemyCount; i++) {
-        enemies[i].update(openGL, canvas);
+        enemies[i].setSpeed(speed);
     }
 }
 
@@ -76,7 +92,15 @@ EnemyBlock::~EnemyBlock() { }
 
 void EnemyBlock::update(OpenGL *openGL, Canvas *canvas)
 {
+    bool isTurn = false;
     for (int i = 0; i < enemyRowCount; i++) {
-        enemyRows[i].update(openGL, canvas);
+        isTurn = isTurn || enemyRows[i].update(openGL, canvas) == TURN;
+    }
+
+    if (isTurn) {
+        speed *= -1;
+        for (int i = 0; i < enemyRowCount; i++) {
+            enemyRows[i].setSpeed(speed);
+        }
     }
 }

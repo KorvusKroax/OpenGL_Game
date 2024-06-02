@@ -1,6 +1,8 @@
 #include <openGL/open_gl.h>
 #include <misc/canvas.h>
 
+enum EnemyState { MOVE, TURN, DIE };
+
 class Enemy
 {
     private:
@@ -13,7 +15,8 @@ class Enemy
         Enemy(float x, float y, float w, float h, float speed);
         ~Enemy();
 
-        void update(OpenGL *openGL, Canvas *canvas);
+        EnemyState update(OpenGL *openGL, Canvas *canvas);
+        void setSpeed(float speed);
 };
 
 class EnemyRow
@@ -29,7 +32,8 @@ class EnemyRow
         EnemyRow(float x, float y, float w, float h, float speed);
         ~EnemyRow();
 
-        void update(OpenGL *openGL, Canvas *canvas);
+        EnemyState update(OpenGL *openGL, Canvas *canvas);
+        void setSpeed(float speed);
 };
 
 class EnemyBlock
