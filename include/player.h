@@ -1,18 +1,21 @@
-// #include <iostream>
-
-#include <open_gl.h>
-#include <canvas.h>
+#include <openGL/open_gl.h>
+#include <misc/canvas.h>
+#include <ammo.h>
 
 class Player
 {
     private:
+        float x, y, w, h, speed;
+        Ammo *ammo = nullptr;
+
+        void show(Canvas *canvas);
+
+        void control(OpenGL *openGL, Canvas *canvas);
         void fire();
 
     public:
-        int x, y;
-
-        Player(int x, int y);
+        Player(float x, float y, float w, float h, float speed);
         ~Player();
-        void show(Canvas *canvas);
-        void processInput(OpenGL *openGL);
+
+        bool update(OpenGL *openGL, Canvas *canvas);
 };

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <shader.h>
+#include <openGL/glad/glad.h>
+#include <openGL/GLFW/glfw3.h>
+#include <openGL/shader.h>
 
 class OpenGL
 {
@@ -14,6 +14,8 @@ class OpenGL
         unsigned int renderbuffer;
         Shader *quadShader;
 
+        float currentTime, lastTime;
+
         int init();
         void terminate();
 
@@ -24,6 +26,8 @@ class OpenGL
         int *pixels = nullptr;
         const char *title;
         GLFWwindow *window;
+
+        float deltaTime;
 
         OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, const char *title = "OpenGL - 2D window");
         ~OpenGL();

@@ -1,4 +1,4 @@
-#include <canvas.h>
+#include <misc/canvas.h>
 
 Canvas::Canvas() { }
 

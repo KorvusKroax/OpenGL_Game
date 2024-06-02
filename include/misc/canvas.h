@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdlib>
-#include <color_rgba.h>
-#include <vector2_int.h>
+#include <misc/color_rgba.h>
+#include <misc/vector2_int.h>
 
 #include <string.h>
 

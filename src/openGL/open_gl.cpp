@@ -1,4 +1,4 @@
-#include <open_gl.h>
+#include <openGL/open_gl.h>
 
 OpenGL::OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, const char *title)
 {
@@ -100,6 +100,10 @@ void OpenGL::update()
 
     glfwSwapBuffers(window);
     glfwPollEvents();
+
+    currentTime = static_cast<float>(glfwGetTime());
+    deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
 }
 
 void OpenGL::terminate()
