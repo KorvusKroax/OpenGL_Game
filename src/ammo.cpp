@@ -1,11 +1,11 @@
 #include <ammo.h>
 
-Ammo::Ammo(float x, float y, float w, float h, float speed)
+Ammo::Ammo(float x, float y, int width, int height, float speed)
 {
     this->x = x;
     this->y = y;
-    this->w = w;
-    this->h = h;
+    this->width = width;
+    this->height = height;
     this->speed = speed;
 }
 
@@ -21,9 +21,7 @@ bool Ammo::update(OpenGL *openGL, Canvas *canvas)
     return true;
 }
 
-
-
 void Ammo::show(Canvas *canvas)
 {
-    canvas->drawRectangle(int(x - w * .5f), int(y - h * .5f), w, h, ColorRGBA(255, 255, 255, 255));
+    canvas->drawRectangle((int)x - (width >> 1), (int)y - (height >> 1), width, height, ColorRGBA(255, 255, 255, 255));
 }

@@ -3,6 +3,10 @@
 #include <player.h>
 #include <enemy.h>
 
+const unsigned int CANVAS_WIDTH = 320;
+const unsigned int CANVAS_HEIGHT = 200;
+const float PIXEL_SCALE = 4;
+
 double mouseX, mouseY;
 
 void update(OpenGL *openGL, Canvas *canvas);
@@ -11,19 +15,17 @@ void control(OpenGL *openGL);
 
 int main()
 {
-    Canvas canvas = Canvas(320, 200);
-    OpenGL openGL = OpenGL(canvas.width, canvas.height, 4, canvas.pixels);
+    Canvas canvas = Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    OpenGL openGL = OpenGL(canvas.width, canvas.height, PIXEL_SCALE, canvas.pixels);
 
-    Player player = Player(canvas.width * .5f, 20, 20, 5, 100);
-    EnemyBlock enemyBlock = EnemyBlock();
+    Player player = Player(canvas.width >> 1, 20);
+    EnemyGroup enemyGroup = EnemyGroup();
 
     while (!openGL.shouldClose())
     {
         canvas.clearCanvas();
-
         player.update(&openGL, &canvas);
-        enemyBlock.update(&openGL, &canvas);
-
+        enemyGroup.update(&openGL, &canvas);
         update(&openGL, &canvas);
 
         openGL.update();

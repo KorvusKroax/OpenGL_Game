@@ -4,12 +4,14 @@
 class Ammo
 {
     private:
+        float x, y;
+        int width, height;
+        float speed;
+
         void show(Canvas *canvas);
 
     public:
-        float x, y, w, h, speed;
-
-        Ammo(float x, float y, float w, float h, float speed);
+        Ammo(float x, float y, int width, int height, float speed);
         ~Ammo();
 
         bool update(OpenGL *openGL, Canvas *canvas);

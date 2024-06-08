@@ -1,101 +1,63 @@
 #include <enemy.h>
 
+
+
 Enemy::Enemy() { }
 
-Enemy::Enemy(int x, int y)
+Enemy::Enemy(float x, float y, int width, int height)
 {
     this->x = x;
     this->y = y;
+    this->width = width;
+    this->height = height;
 }
 
 Enemy::~Enemy() { }
 
-int Enemy::update(OpenGL *openGL, Canvas *canvas)
+void Enemy::update(OpenGL *openGL, Canvas *canvas, float *speed, bool *turn, int *border)
 {
-    x += speed * openGL->deltaTime;
+    x += (*speed) * openGL->deltaTime;
+    *turn = (*turn) || x + (canvas->width >> 1) <= (*border) || x + (canvas->width >> 1) >= canvas->width - 1 - (*border);
     show(canvas);
-
-    if (canvas->width * .5f + x <= 0 || canvas->width * .5f + x >= canvas->width - 1) {
-        return 1; // turn
-    }
-
-    return 0;
 }
 
 void Enemy::show(Canvas *canvas)
 {
-    canvas->drawRectangle(
-        int(canvas->width * .5f + x - width * .5f),
-        int(canvas->height * .5f + y - height * .5f),
-        width, height, ColorRGBA(255, 255, 255, 255));
-}
-
-void Enemy::changeDirection()
-{
-    speed *= -1;
+    canvas->drawRectangle((int)x - (width >> 1) + (canvas->width >> 1), (int)y - (height >> 1) + (canvas->height >> 1), width, height, ColorRGBA(255, 255, 255, 255));
+    canvas->setPixel((int)x + (canvas->width >> 1), (int)y + (canvas->height >> 1), ColorRGBA(255, 255, 255, 255));
 }
 
 
 
-EnemyRow::EnemyRow() { }
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-EnemyRow::EnemyRow(float y, float enemyWidth, float spacing)
+EnemyGroup::EnemyGroup()
 {
-    enemies = new Enemy[enemyCount];
+    enemies = new Enemy[enemyCountPerRow * enemyRowCount];
 
-    width = (enemyWidth + spacing) * enemyCount;
-    for (int i = 0; i < enemyCount; i++) {
-        enemies[i] = Enemy((enemyWidth + spacing) * i - width * .5f, y);
-    }
-}
+    int halfWidth = ((enemyWidth + spacing) * (enemyCountPerRow - 1)) >> 1;
+    int halfHeight = ((enemyHeight + spacing) * (enemyRowCount - 1)) >> 1;
 
-EnemyRow::~EnemyRow() { }
-
-bool EnemyRow::update(OpenGL *openGL, Canvas *canvas)
-{
-    bool isTurn = 0;
-    for (int i = 0; i < enemyCount; i++) {
-        if (enemies[i].update(openGL, canvas)) {
-            isTurn = true;
+    for (int j = 0; j < enemyRowCount; j++) {
+        for (int i = 0; i < enemyCountPerRow; i++) {
+            enemies[i + j * enemyCountPerRow] = Enemy(
+                (enemyWidth + spacing) * i - halfWidth,
+                (enemyHeight + spacing) * j - halfHeight,
+                enemyWidth, enemyHeight);
         }
     }
-
-    return isTurn;
 }
 
-void EnemyRow::changeDirection()
+EnemyGroup::~EnemyGroup() { }
+
+void EnemyGroup::update(OpenGL *openGL, Canvas *canvas)
 {
-    for (int i = 0; i < enemyCount; i++) {
-        enemies[i].changeDirection();
+    canvas->drawLine(border, 0, border, canvas->height - 1, ColorRGBA(255, 0, 0, 255));
+    canvas->drawLine(canvas->width - 1 - border, 0, canvas->width - 1 - border, canvas->height - 1, ColorRGBA(255, 0, 0, 255));
+
+    bool turn = false;
+    for (int i = 0; i < enemyCountPerRow * enemyRowCount; i++) {
+        enemies[i].update(openGL, canvas, &speed, &turn, &border);
     }
-}
-
-
-
-EnemyBlock::EnemyBlock(float enemyHeight, float spacing)
-{
-    enemyRows = new EnemyRow[rowCount];
-
-    height = (enemyHeight + spacing) * rowCount;
-    for (int i = 0; i < rowCount; i++) {
-        enemyRows[i] = EnemyRow((enemyHeight + spacing) * i - height * .5f);
-    }
-}
-
-EnemyBlock::~EnemyBlock() { }
-
-void EnemyBlock::update(OpenGL *openGL, Canvas *canvas)
-{
-    bool isTurn = false;
-    for (int i = 0; i < rowCount; i++) {
-        if (enemyRows[i].update(openGL, canvas)) {
-            isTurn = true;
-        }
-    }
-
-    if (isTurn) {
-        for (int i = 0; i < rowCount; i++) {
-            enemyRows[i].changeDirection();
-        }
-    }
+    if (turn) speed *= -1;
 }

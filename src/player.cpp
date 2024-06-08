@@ -1,12 +1,9 @@
 #include <player.h>
 
-Player::Player(float x, float y, float w, float h, float speed)
+Player::Player(float x, float y)
 {
     this->x = x;
     this->y = y;
-    this->w = w;
-    this->h = h;
-    this->speed = speed;
 }
 
 Player::~Player() { }
@@ -25,14 +22,10 @@ bool Player::update(OpenGL *openGL, Canvas *canvas)
     return true;
 }
 
-
-
 void Player::show(Canvas *canvas)
 {
-    canvas->drawRectangle(int(x - w * .5f), int(y - h * .5f), w, h, ColorRGBA(255, 255, 255, 255));
+    canvas->drawRectangle((int)x - (width >> 1), (int)y - (height >> 1), width, height, ColorRGBA(255, 255, 255, 255));
 }
-
-
 
 void Player::control(OpenGL *openGL, Canvas *canvas)
 {
@@ -43,5 +36,5 @@ void Player::control(OpenGL *openGL, Canvas *canvas)
 
 void Player::fire()
 {
-    ammo = new Ammo(x, y, .5f, 5, 300);
+    ammo = new Ammo(x, y, 0, 5, 300);
 }

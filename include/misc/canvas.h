@@ -9,8 +9,8 @@
 class Canvas
 {
     public:
-        unsigned int width = 0;
-        unsigned int height = 0;
+        unsigned int width;
+        unsigned int height;
         int *pixels;
 
         Canvas();

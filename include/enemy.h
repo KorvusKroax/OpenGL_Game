@@ -5,54 +5,38 @@ class Enemy
 {
     private:
         float x, y;
-
-        float width = 10;
-        float height = 10;
-        float speed = 50;
+        int width, height;
 
         void show(Canvas *canvas);
 
     public:
         Enemy();
-        Enemy(int x, int y);
+        Enemy(float x, float y, int width, int height);
         ~Enemy();
 
-        int update(OpenGL *openGL, Canvas *canvas);
-        void changeDirection();
+        void update(OpenGL *openGL, Canvas *canvas, float *speed, bool *turn, int *border);
 };
 
 
 
-class EnemyRow
+class EnemyGroup
 {
     private:
-        float width;
-
         Enemy *enemies;
-        int enemyCount = 8;
+        int enemyCountPerRow = 7;
+        int enemyRowCount = 5;
+
+        int enemyWidth = 12;
+        int enemyHeight = 10;
+        int spacing = 8;
+
+        float speed = 30;
+
+        int border = 20;
 
     public:
-        EnemyRow();
-        EnemyRow(float y, float enemyWidth = 10, float spacing = 10);
-        ~EnemyRow();
-
-        bool update(OpenGL *openGL, Canvas *canvas);
-        void changeDirection();
-};
-
-
-
-class EnemyBlock
-{
-    private:
-        float height;
-
-        EnemyRow *enemyRows;
-        int rowCount = 5;
-
-    public:
-        EnemyBlock(float enemyHeight = 10, float spacing = 10);
-        ~EnemyBlock();
+        EnemyGroup();
+        ~EnemyGroup();
 
         void update(OpenGL *openGL, Canvas *canvas);
 };
