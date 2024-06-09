@@ -5,7 +5,7 @@
 
 const unsigned int CANVAS_WIDTH = 320;
 const unsigned int CANVAS_HEIGHT = 200;
-const float PIXEL_SCALE = 4;
+const float PIXEL_SCALE = 3;
 
 double mouseX, mouseY;
 

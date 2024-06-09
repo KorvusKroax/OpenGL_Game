@@ -4,6 +4,11 @@
 #include <openGL/GLFW/glfw3.h>
 #include <openGL/shader.h>
 
+enum ScreenMode {
+    WINDOWED,
+    FULLSCREEN
+};
+
 class OpenGL
 {
     private:
@@ -15,8 +20,11 @@ class OpenGL
         Shader *quadShader;
 
         float currentTime, lastTime;
+        float aspectRatio = 1;
 
-        int init();
+        void initWindowed();
+        void initFullscreen();
+        void initQuad();
         void terminate();
 
     public:
@@ -29,7 +37,7 @@ class OpenGL
 
         float deltaTime;
 
-        OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, const char *title = "OpenGL - 2D window");
+        OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, ScreenMode screenMode = WINDOWED, const char *title = "OpenGL - 2D window");
         ~OpenGL();
         void update();
         bool shouldClose();

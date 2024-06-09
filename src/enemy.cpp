@@ -23,7 +23,12 @@ void Enemy::update(OpenGL *openGL, Canvas *canvas, float *speed, bool *turn, int
 
 void Enemy::show(Canvas *canvas)
 {
-    canvas->drawRectangle((int)x - (width >> 1) + (canvas->width >> 1), (int)y - (height >> 1) + (canvas->height >> 1), width, height, ColorRGBA(255, 255, 255, 255));
+    canvas->drawRectangle(
+        (int)x - (width >> 1) + (canvas->width >> 1),
+        (int)y - (height >> 1) + (canvas->height >> 1),
+        width, height,
+        ColorRGBA(255, 255, 255, 255));
+
     canvas->setPixel((int)x + (canvas->width >> 1), (int)y + (canvas->height >> 1), ColorRGBA(255, 255, 255, 255));
 }
 

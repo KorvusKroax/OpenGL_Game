@@ -1,13 +1,38 @@
 #include <openGL/open_gl.h>
 
-OpenGL::OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, const char *title)
+OpenGL::OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, ScreenMode screenMode, const char *title)
 {
     this->width = width;
     this->height = height;
     this->pixelScale = pixelScale;
     this->pixels = pixels;
     this->title = title;
-    init();
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    if (screenMode == WINDOWED) {
+        initWindowed();
+    } else if (screenMode == FULLSCREEN) {
+        initFullscreen();
+    }
+
+    if (window == NULL) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+    }
+    glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return;
+    }
+
+    initQuad();
+
+    quadShader = new Shader("shaders/canvas.vert", "shaders/canvas.frag");
 }
 
 OpenGL::~OpenGL()
@@ -15,28 +40,24 @@ OpenGL::~OpenGL()
     terminate();
 }
 
-int OpenGL::init()
+void OpenGL::initWindowed()
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // frame on/off
-
     window = glfwCreateWindow(width * pixelScale, height * pixelScale, title, NULL, NULL);
-    if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
+}
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+void OpenGL::initFullscreen()
+{
+    GLFWmonitor *primaryMonitor =  glfwGetPrimaryMonitor();
+    const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
+    window = glfwCreateWindow(videoMode->width, videoMode->height, title, primaryMonitor, NULL);
 
+    aspectRatio = 1;
+}
+
+void OpenGL::initQuad()
+{
     glGenVertexArrays(1, &quadVAO);
     glBindVertexArray(quadVAO);
 
@@ -47,11 +68,11 @@ int OpenGL::init()
         // positions    // texCoords
         -1.0f,  1.0f,   0.0f, 1.0f,     // left top
         -1.0f, -1.0f,   0.0f, 0.0f,     // left bottom
-        1.0f, -1.0f,   1.0f, 0.0f,     // right bottom
+         1.0f, -1.0f,   1.0f, 0.0f,     // right bottom
 
         -1.0f,  1.0f,   0.0f, 1.0f,     // left top
-        1.0f, -1.0f,   1.0f, 0.0f,     // right bottom
-        1.0f,  1.0f,   1.0f, 1.0f      // right top
+         1.0f, -1.0f,   1.0f, 0.0f,     // right bottom
+         1.0f,  1.0f,   1.0f, 1.0f      // right top
     };
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
@@ -77,10 +98,6 @@ int OpenGL::init()
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    quadShader = new Shader("shaders/canvas.vert", "shaders/canvas.frag");
-
-    return 0;
 }
 
 void OpenGL::update()
