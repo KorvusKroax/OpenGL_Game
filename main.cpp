@@ -16,7 +16,7 @@ void control(OpenGL *openGL);
 int main()
 {
     Canvas canvas = Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    OpenGL openGL = OpenGL(canvas.width, canvas.height, PIXEL_SCALE, canvas.pixels);
+    OpenGL openGL = OpenGL(FULLSCREEN, canvas.width, canvas.height, canvas.pixels, PIXEL_SCALE);
 
     Player player = Player(canvas.width >> 1, 20);
     EnemyGroup enemyGroup = EnemyGroup();

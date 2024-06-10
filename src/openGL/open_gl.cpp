@@ -1,6 +1,6 @@
 #include <openGL/open_gl.h>
 
-OpenGL::OpenGL(unsigned int width, unsigned int height, float pixelScale, int *pixels, ScreenMode screenMode, const char *title)
+OpenGL::OpenGL(ScreenMode screenMode, unsigned int width, unsigned int height, int *pixels, float pixelScale, const char *title)
 {
     this->width = width;
     this->height = height;
@@ -53,7 +53,14 @@ void OpenGL::initFullscreen()
     const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
     window = glfwCreateWindow(videoMode->width, videoMode->height, title, primaryMonitor, NULL);
 
-    aspectRatio = 1;
+    pixelScale = (width > height) ?
+        (float)videoMode->width / width :
+        (float)videoMode->height / height;
+
+    for (int i = 0; i < 24; i += 4) {
+        quadVertices[i + 0] *= (float)width / videoMode->width * pixelScale;
+        quadVertices[i + 1] *= (float)height / videoMode->height * pixelScale;
+    }
 }
 
 void OpenGL::initQuad()
@@ -64,16 +71,6 @@ void OpenGL::initQuad()
     glGenBuffers(1, &quadVBO);
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
 
-    float quadVertices[] = {
-        // positions    // texCoords
-        -1.0f,  1.0f,   0.0f, 1.0f,     // left top
-        -1.0f, -1.0f,   0.0f, 0.0f,     // left bottom
-         1.0f, -1.0f,   1.0f, 0.0f,     // right bottom
-
-        -1.0f,  1.0f,   0.0f, 1.0f,     // left top
-         1.0f, -1.0f,   1.0f, 0.0f,     // right bottom
-         1.0f,  1.0f,   1.0f, 1.0f      // right top
-    };
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
@@ -104,8 +101,8 @@ void OpenGL::update()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_DEPTH_TEST);
-    // glClearColor(.1f, .2f, .2f, 1);
-    // glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(.1f, .2f, .2f, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     quadShader->use();
     glBindVertexArray(quadVAO);
