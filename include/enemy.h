@@ -14,7 +14,7 @@ class Enemy
         Enemy(float x, float y, int width, int height);
         ~Enemy();
 
-        void update(OpenGL *openGL, Canvas *canvas, float *speed, bool *turn, int *border);
+        void update(OpenGL *openGL, Canvas *canvas, float speed, bool *turn, int *border);
 };
 
 
@@ -23,19 +23,18 @@ class EnemyGroup
 {
     private:
         Enemy *enemies;
-        int enemyCountPerRow = 7;
+        int enemyCountPerRow = 11;
         int enemyRowCount = 5;
 
-        int enemyWidth = 12;
-        int enemyHeight = 10;
-        int spacing = 8;
+        int enemyWidth = 16;
+        int enemyHeight = 16;
 
-        float speed = 30;
+        float speed = 10;
 
-        int border = 20;
+        int border = 8;
 
     public:
-        EnemyGroup();
+        EnemyGroup(int x, int y);
         ~EnemyGroup();
 
         void update(OpenGL *openGL, Canvas *canvas);

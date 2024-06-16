@@ -48,13 +48,13 @@ unsigned int Canvas::getPixel(int x, int y)
 
 void Canvas::drawRectangle(int x, int y, int w, int h, ColorRGBA color)
 {
-    for (int i = 0; i <= w; i++) {
-        setPixel(x + i, y    , color);
-        setPixel(x + i, y + h, color);
+    for (int i = 0; i < w; i++) {
+        setPixel(x + i, y        , color);
+        setPixel(x + i, y + h - 1, color);
     }
-    for (int i = 1; i < h; i++) {
-        setPixel(x    , y + i, color);
-        setPixel(x + w, y + i, color);
+    for (int i = 1; i < h - 1; i++) {
+        setPixel(x        , y + i, color);
+        setPixel(x + w - 1, y + i, color);
     }
 }
 
