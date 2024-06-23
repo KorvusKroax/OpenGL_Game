@@ -1,5 +1,7 @@
 #include <misc/canvas.h>
 
+#include <iostream>
+
 Canvas::Canvas() { }
 
 Canvas::Canvas(unsigned int width, unsigned int height)
@@ -32,6 +34,13 @@ void Canvas::setPixel(int x, int y, ColorRGBA color)
 {
     if (x >= 0 && x < width && y >= 0 && y < height) {
         pixels[x + y * width] = color.value;
+    }
+}
+
+void Canvas::setPixel(int x, int y, int value)
+{
+    if (x >= 0 && x < width && y >= 0 && y < height) {
+        pixels[x + y * width] = value;
     }
 }
 
@@ -238,5 +247,32 @@ void Canvas::spanFill(int x, int y, ColorRGBA color)
         x2 = next[index + 1];
         y  = next[index + 2];
         dy = next[index + 3];
+    }
+}
+
+// void Canvas::drawImage(int x, int y, const char *fileName)
+// {
+//     int w, h, channelCount;
+//     stbi_set_flip_vertically_on_load(true);
+//     unsigned char *image = stbi_load(fileName, &w, &h, &channelCount, 0);
+
+//     for (int i = 0; i < w; i++) {
+//         for (int j = 0; j < h; j++) {
+//             setPixel(x + i, y + j, ColorRGBA(
+//                 image[(i * channelCount + 0) + j * w * channelCount],
+//                 image[(i * channelCount + 1) + j * w * channelCount],
+//                 image[(i * channelCount + 2) + j * w * channelCount],
+//                 255
+//             ));
+//         }
+//     }
+// }
+
+void Canvas::drawSprite(int x, int y, Sprite *sprite)
+{
+    for (int i = 0; i < sprite->width; i++) {
+        for (int j = 0; j < sprite->height; j++) {
+            setPixel(x + i, y + j, sprite->pixels[i + j * sprite->width]);
+        }
     }
 }

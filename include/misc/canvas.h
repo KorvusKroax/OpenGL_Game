@@ -1,9 +1,10 @@
 #pragma once
 
-#include <cstdlib>
+#include <misc/sprite_sheet.h>
 #include <misc/color_rgba.h>
 #include <misc/vector2_int.h>
 
+#include <cstdlib>
 #include <string.h>
 
 class Canvas
@@ -22,6 +23,7 @@ class Canvas
 
         void setPixel(Vector2Int p, ColorRGBA color);
         void setPixel(int x, int y, ColorRGBA color);
+        void setPixel(int x, int y, int value);
         unsigned int getPixel(Vector2Int p);
         unsigned int getPixel(int x, int y);
 
@@ -36,4 +38,7 @@ class Canvas
 
         void floodFill(int x, int y, ColorRGBA color);
         void spanFill(int x, int y, ColorRGBA color);
+
+        // void drawImage(int x, int y, const char *fileName);
+        void drawSprite(int x, int y, Sprite *sprite);
 };

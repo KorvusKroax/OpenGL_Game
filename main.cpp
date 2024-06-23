@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <openGL/open_gl.h>
 #include <misc/canvas.h>
 #include <player.h>
@@ -18,12 +20,17 @@ int main()
     Canvas canvas = Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     OpenGL openGL = OpenGL(WINDOWED, canvas.width, canvas.height, canvas.pixels, PIXEL_SCALE);
 
+    SpriteSheet spriteSheet = SpriteSheet("Green_Marble_Alien_Face_128x128.png");
+    Sprite sprite = spriteSheet.getSprite(0, 0, 32, 32);
+
     Player player = Player(canvas.width >> 1, 20);
     EnemyGroup enemyGroup = EnemyGroup(canvas.width >> 1, canvas.height - (canvas.height / 3));
 
     while (!openGL.shouldClose())
     {
         canvas.clearCanvas();
+
+        canvas.drawSprite(10, 10, &sprite);
 
         player.update(&openGL, &canvas);
         enemyGroup.update(&openGL, &canvas);

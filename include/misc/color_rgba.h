@@ -19,7 +19,7 @@ struct ColorRGBA
 
     void updateValue()
     {
-        value = r|(g<<8)|(b<<16)|(a<<24);
+        value = r | (g << 8) | (b << 16) | (a << 24);
     }
 };
 
