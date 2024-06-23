@@ -55,8 +55,10 @@ unsigned int Canvas::getPixel(int x, int y)
     return -1;
 }
 
-void Canvas::drawRectangle(int x, int y, int w, int h, ColorRGBA color)
+void Canvas::drawRectangle(int x, int y, int w, int h, ColorRGBA color, bool centered)
 {
+    x -= centered ? w >> 1 : 0;
+    y -= centered ? h >> 1 : 0;
     for (int i = 0; i < w; i++) {
         setPixel(x + i, y        , color);
         setPixel(x + i, y + h - 1, color);
@@ -268,11 +270,19 @@ void Canvas::spanFill(int x, int y, ColorRGBA color)
 //     }
 // }
 
-void Canvas::drawSprite(int x, int y, Sprite *sprite)
+void Canvas::drawSprite(int x, int y, Sprite *sprite, bool centered)
 {
+    x -= centered ? sprite->width >> 1 : 0;
+    y -= centered ? sprite->height >> 1 : 0;
     for (int i = 0; i < sprite->width; i++) {
-        for (int j = 0; j < sprite->height; j++) {
-            setPixel(x + i, y + j, sprite->pixels[i + j * sprite->width]);
+        int xx = x + i;
+        if (xx >= 0 && xx < width) {
+            for (int j = 0; j < sprite->height; j++) {
+                int yy = y + j;
+                if (yy >= 0 && y < height) {
+                    pixels[xx + yy * width] = sprite->pixels[i + j * sprite->width];
+                }
+            }
         }
     }
 }

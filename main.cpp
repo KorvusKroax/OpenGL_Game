@@ -21,16 +21,17 @@ int main()
     OpenGL openGL = OpenGL(WINDOWED, canvas.width, canvas.height, canvas.pixels, PIXEL_SCALE);
 
     SpriteSheet spriteSheet = SpriteSheet("Green_Marble_Alien_Face_128x128.png");
-    Sprite sprite = spriteSheet.getSprite(0, 0, 32, 32);
 
-    Player player = Player(canvas.width >> 1, 20);
-    EnemyGroup enemyGroup = EnemyGroup(canvas.width >> 1, canvas.height - (canvas.height / 3));
+    Sprite playerSprite = spriteSheet.getSprite(32, 32, 20, 5);
+    Sprite ammoSprite = spriteSheet.getSprite(16, 96, 1, 5);
+    Player player = Player(canvas.width >> 1, 20, &playerSprite, &ammoSprite);
+
+    Sprite enemySprite = spriteSheet.getSprite(64, 64, 16, 16);
+    EnemyGroup enemyGroup = EnemyGroup(canvas.width >> 1, canvas.height - (canvas.height / 3), &enemySprite);
 
     while (!openGL.shouldClose())
     {
         canvas.clearCanvas();
-
-        canvas.drawSprite(10, 10, &sprite);
 
         player.update(&openGL, &canvas);
         enemyGroup.update(&openGL, &canvas);

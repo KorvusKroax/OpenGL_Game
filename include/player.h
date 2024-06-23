@@ -1,16 +1,16 @@
 #include <openGL/open_gl.h>
 #include <misc/canvas.h>
+#include <misc/sprite.h>
 #include <ammo.h>
 
 class Player
 {
     private:
         float x, y;
-
-        int width = 20;
-        int height = 5;
+        Sprite *sprite;
         float speed = 100;
 
+        Sprite *ammoSprite;
         Ammo *ammo = nullptr;
 
         void show(Canvas *canvas);
@@ -18,7 +18,7 @@ class Player
         void fire();
 
     public:
-        Player(float x, float y);
+        Player(float x, float y, Sprite *sprite, Sprite *ammoSprite);
         ~Player();
 
         bool update(OpenGL *openGL, Canvas *canvas);

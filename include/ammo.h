@@ -5,13 +5,13 @@ class Ammo
 {
     private:
         float x, y;
-        int width, height;
+        Sprite *sprite;
         float speed;
 
         void show(Canvas *canvas);
 
     public:
-        Ammo(float x, float y, int width, int height, float speed);
+        Ammo(float x, float y, Sprite *sprite, float speed);
         ~Ammo();
 
         bool update(OpenGL *openGL, Canvas *canvas);

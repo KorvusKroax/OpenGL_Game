@@ -1,27 +1,10 @@
 #pragma once
 
+//#define STB_IMAGE_IMPLEMENTATION
 #include <misc/stb_image.h>
+#include <misc/sprite.h>
 
 #include <iostream>
-
-class Sprite
-{
-    public:
-        unsigned int width;
-        unsigned int height;
-        int *pixels;
-
-        Sprite() { }
-
-        ~Sprite() { delete[] pixels; }
-
-        Sprite(int width, int height, int *pixels)
-        {
-            this->width = width;
-            this->height = height;
-            this->pixels = pixels;
-        }
-};
 
 class SpriteSheet
 {

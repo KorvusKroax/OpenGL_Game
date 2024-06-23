@@ -1,15 +1,12 @@
 #include <enemy.h>
 
-
-
 Enemy::Enemy() { }
 
-Enemy::Enemy(float x, float y, int width, int height)
+Enemy::Enemy(float x, float y, Sprite *sprite)
 {
     this->x = x;
     this->y = y;
-    this->width = width;
-    this->height = height;
+    this->sprite = sprite;
 }
 
 Enemy::~Enemy() { }
@@ -17,38 +14,32 @@ Enemy::~Enemy() { }
 void Enemy::update(OpenGL *openGL, Canvas *canvas, float speed, bool *turn, int *border)
 {
     x += (speed * openGL->deltaTime);
-    *turn = (*turn) || x <= (width >> 1) || x > canvas->width - (width >> 1);
+    *turn = (*turn) || x <= (sprite->width >> 1) || x > canvas->width - (sprite->width >> 1);
     show(canvas);
 }
 
 void Enemy::show(Canvas *canvas)
 {
-    canvas->drawRectangle(
-        x - (width >> 1),
-        y - (height >> 1),
-        width, height,
-        ColorRGBA(255, 255, 255, 255));
-
-    canvas->setPixel(x, y, ColorRGBA(255, 255, 255, 255));
+    canvas->drawSprite(x, y, sprite, true);
 }
 
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-EnemyGroup::EnemyGroup(int x, int y)
+EnemyGroup::EnemyGroup(int x, int y, Sprite *enemySprite)
 {
     enemies = new Enemy[enemyCountPerRow * enemyRowCount];
 
-    int halfWidth = (enemyWidth * enemyCountPerRow) >> 1;
-    int halfHeight = (enemyHeight * enemyRowCount) >> 1;
+    int halfWidth = (enemySprite->width * enemyCountPerRow) >> 1;
+    int halfHeight = (enemySprite->height * enemyRowCount) >> 1;
 
     for (int j = 0; j < enemyRowCount; j++) {
         for (int i = 0; i < enemyCountPerRow; i++) {
             enemies[i + j * enemyCountPerRow] = Enemy(
-                x - halfWidth + enemyWidth * i,
-                y - halfHeight + enemyHeight * j,
-                enemyWidth, enemyHeight);
+                x - halfWidth + enemySprite->width * i,
+                y - halfHeight + enemySprite->height * j,
+                enemySprite);
         }
     }
 }
@@ -64,7 +55,5 @@ void EnemyGroup::update(OpenGL *openGL, Canvas *canvas)
     for (int i = 0; i < enemyCountPerRow * enemyRowCount; i++) {
         enemies[i].update(openGL, canvas, speed, &turn, &border);
     }
-    if (turn) {
-        speed *= -1;
-    }
+    if (turn) speed *= -1;
 }

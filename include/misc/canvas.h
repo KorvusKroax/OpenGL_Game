@@ -27,7 +27,7 @@ class Canvas
         unsigned int getPixel(Vector2Int p);
         unsigned int getPixel(int x, int y);
 
-        void drawRectangle(int x, int y, int w, int h, ColorRGBA color);
+        void drawRectangle(int x, int y, int w, int h, ColorRGBA color, bool centered = false);
 
         void drawLine(Vector2Int p1, Vector2Int p2, ColorRGBA color);
         void drawLine(int x1, int y1, int x2, int y2, ColorRGBA color);
@@ -40,5 +40,5 @@ class Canvas
         void spanFill(int x, int y, ColorRGBA color);
 
         // void drawImage(int x, int y, const char *fileName);
-        void drawSprite(int x, int y, Sprite *sprite);
+        void drawSprite(int x, int y, Sprite *sprite, bool centered = false);
 };
